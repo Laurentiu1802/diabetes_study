@@ -1,49 +1,52 @@
-# ---- Load libraries ----
+# install required libraries
 install.packages("tidyverse")
-install.packages("haven")   # for NHANES .XPT files
+install.packages("haven")   # for reading nhanes .xpt files
 install.packages("janitor") # for cleaning column names
 
+# load libraries
 library(tidyverse)
 library(haven)
 library(janitor)
 
-# ---- Load Pima dataset ----
+# load pima dataset and clean column names
 pima <- read_csv("D:/School/Biostatistics/data/diabetes.csv") %>%
   clean_names()
 
+# preview pima data structure
 glimpse(pima)
 
-# ---- Load NHANES data ----
+# load nhanes datasets and clean column names
 demo <- read_xpt("D:/School/Biostatistics/data/DEMO_J.xpt") %>% clean_names()
 diq  <- read_xpt("D:/School/Biostatistics/data/DIQ_J.xpt") %>% clean_names()
 glu  <- read_xpt("D:/School/Biostatistics/data/GLU_J.xpt") %>% clean_names()
 bmx  <- read_xpt("D:/School/Biostatistics/data/BMX_J.xpt") %>% clean_names()
 
-# ---- Merge NHANES data by SEQN ----
+# merge nhanes datasets by participant id
 nhanes <- demo %>%
   left_join(diq,  by = "seqn") %>%
   left_join(glu,  by = "seqn") %>%
   left_join(bmx,  by = "seqn")
 
+# preview merged nhanes dataset
 glimpse(nhanes)
 
-# ---- Select relevant NHANES variables ----
+# select relevant variables from nhanes and create binary diabetes variable
 nhanes_selected <- nhanes %>%
   select(
     seqn,
-    age = ridageyr,                # Age in years
-    gender = riagendr,             # 1 = Male, 2 = Female
-    bmi = bmxbmi,                  # Body Mass Index
-    glucose = lbxglu,              # Fasting glucose (mg/dL)
-    diabetes_status = diq010       # Doctor told you have diabetes: 1=Yes, 2=No, 3=Borderline
+    age = ridageyr,                # age in years
+    gender = riagendr,             # 1 = male, 2 = female
+    bmi = bmxbmi,                  # body mass index
+    glucose = lbxglu,              # fasting glucose level
+    diabetes_status = diq010       # 1 = yes, 2 = no
   ) %>%
   filter(!is.na(glucose), !is.na(bmi), !is.na(age), !is.na(diabetes_status)) %>%
   mutate(
-    gender = ifelse(gender == 2, "female", "male"),
-    diabetes_binary = ifelse(diabetes_status == 1, 1, 0)
+    gender = ifelse(gender == 2, "female", "male"),       # recode gender
+    diabetes_binary = ifelse(diabetes_status == 1, 1, 0)  # binary diabetes flag
   )
 
-# ---- Align Pima dataset to match ----
+# select matching variables from pima dataset
 pima_selected <- pima %>%
   select(
     age,
@@ -52,22 +55,20 @@ pima_selected <- pima %>%
     diabetes_binary = outcome
   ) %>%
   mutate(
-    gender = "female"  # All Pima patients are female
+    gender = "female"  # all pima participants are female
   )
 
-# ---- Preview cleaned datasets ----
+# show summary of cleaned datasets
 summary(pima_selected)
 summary(nhanes_selected)
 
-
-
-# Combine both datasets into one long format
+# combine both datasets and label them
 combined_glucose <- bind_rows(
   pima_selected %>% mutate(dataset = "Pima"),
   nhanes_selected %>% mutate(dataset = "NHANES")
 )
 
-# Glucose Histogram
+# export histogram of glucose by dataset
 postscript("glucose_histogram.eps", width=8, height=6, paper="special", horizontal=FALSE)
 ggplot(combined_glucose, aes(x = glucose, fill = dataset)) +
   geom_histogram(bins = 30, position = "identity", color = "black", alpha = 1) +
@@ -76,8 +77,7 @@ ggplot(combined_glucose, aes(x = glucose, fill = dataset)) +
   theme_minimal()
 dev.off()
 
-
-# BMI Boxplot
+# export boxplot of bmi by dataset
 postscript("bmi_boxplot.eps", width=8, height=6, paper="special", horizontal=FALSE)
 ggplot(combined_glucose, aes(x = dataset, y = bmi, fill = dataset)) +
   geom_boxplot() +
@@ -86,14 +86,13 @@ ggplot(combined_glucose, aes(x = dataset, y = bmi, fill = dataset)) +
   theme_minimal()
 dev.off()
 
-
-# Barplot of diabetes prevalence
+# combine datasets again for diabetes prevalence plot
 combined_diabetes <- bind_rows(
   pima_selected %>% mutate(dataset = "Pima"),
   nhanes_selected %>% mutate(dataset = "NHANES")
 )
 
-# Diabetes Prevalence Barplot
+# export barplot of diabetes prevalence
 postscript("diabetes_barplot.eps", width=8, height=6, paper="special", horizontal=FALSE)
 ggplot(combined_diabetes, aes(x = dataset, fill = factor(diabetes_binary))) +
   geom_bar(position = "fill", color = "black") +
@@ -106,33 +105,30 @@ ggplot(combined_diabetes, aes(x = dataset, fill = factor(diabetes_binary))) +
   theme_minimal()
 dev.off()
 
-
-
-# T-tests
+# run t-tests and chi-square test, save to output file
 sink("D:/School/Biostatistics/output/stat_tests.txt")
+
+# t-tests for glucose, bmi, and age
 t.test(glucose ~ dataset, data = combined_glucose)
 t.test(bmi ~ dataset, data = combined_glucose)
 t.test(age ~ dataset, data = combined_glucose)
 
-# Create contingency table
+# create contingency table and run chi-square test
 diabetes_table <- table(combined_diabetes$dataset, combined_diabetes$diabetes_binary)
 diabetes_table
-
-# Chi-square test
 chisq.test(diabetes_table)
+
 sink()
 
-
-# Logistic regression: Pima
+# run logistic regression for pima dataset and save output
 sink("D:/School/Biostatistics/output/logistic_models.txt")
 pima_model <- glm(diabetes_binary ~ age + bmi + glucose, data = pima_selected, family = "binomial")
 summary(pima_model)
 
-
-# Logistic regression: NHANES
+# run logistic regression for nhanes dataset and save output
 nhanes_model <- glm(diabetes_binary ~ age + bmi + glucose, data = nhanes_selected, family = "binomial")
 summary(nhanes_model)
 sink()
+
+# show current working directory
 getwd()
-
-
