@@ -1,0 +1,21 @@
+Title: Comparative Analysis of Diabetes Risk in Pima and NHANES Populations
+
+Problem Solving Mode:
+This project aimed to compare diabetes-related risk factors between a high-risk population (Pima Indian women) and a general U.S. population sample (NHANES 2017–2018). The study used descriptive statistics, hypothesis testing (t-tests and chi-square), and logistic regression to model and interpret diabetes risk.
+
+Justification:
+The Pima Indian dataset is widely used in machine learning but less often compared directly with modern epidemiological data. NHANES is nationally representative, and by aligning variables (age, BMI, glucose, and diabetes status), this project makes a valid biostatistical comparison between two important population groups.
+
+Platform:
+The analysis was performed entirely in R (locally, using RStudio) with the TinyTeX LaTeX distribution used to compile the final report. Plots were exported in `.eps` format and integrated into a LaTeX report following academic formatting guidelines.
+
+Significant Test Data:
+- Average age: Pima = 33.2 years, NHANES = 45.7 years
+- Average BMI: Pima = 32.0, NHANES = 29.0
+- Glucose levels: Pima = 121 mg/dL, NHANES = 112 mg/dL
+- Diabetes prevalence: Pima = 35%, NHANES = 14%
+- T-tests for all three variables returned p-values < 0.001
+- Chi-square test: X² = 167.02, p < 0.001
+
+Commented Results:
+Statistical tests confirmed that the Pima group had significantly higher risk factor values and diabetes prevalence. Logistic regression models showed glucose, BMI, and age were significant predictors of diabetes in both groups. This supports the known clinical risk profile of the Pima population and demonstrates the validity of using aligned public datasets for comparative health studies.

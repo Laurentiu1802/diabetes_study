@@ -1,0 +1,46 @@
+
+	Welch Two Sample t-test
+
+data:  glucose by dataset
+t = -6.8046, df = 1329.2, p-value = 1.529e-11
+alternative hypothesis: true difference in means between group NHANES and group Pima is not equal to 0
+95 percent confidence interval:
+ -11.691806  -6.458974
+sample estimates:
+mean in group NHANES   mean in group Pima 
+            111.8191             120.8945 
+
+
+	Welch Two Sample t-test
+
+data:  bmi by dataset
+t = -9.5385, df = 1170.6, p-value < 2.2e-16
+alternative hypothesis: true difference in means between group NHANES and group Pima is not equal to 0
+95 percent confidence interval:
+ -3.651274 -2.405451
+sample estimates:
+mean in group NHANES   mean in group Pima 
+            28.96422             31.99258 
+
+
+	Welch Two Sample t-test
+
+data:  age by dataset
+t = 21.601, df = 2193.6, p-value < 2.2e-16
+alternative hypothesis: true difference in means between group NHANES and group Pima is not equal to 0
+95 percent confidence interval:
+ 11.33014 13.59274
+sample estimates:
+mean in group NHANES   mean in group Pima 
+            45.70232             33.24089 
+
+        
+            0    1
+  NHANES 2435  407
+  Pima    500  268
+
+	Pearson's Chi-squared test with Yates' continuity correction
+
+data:  diabetes_table
+X-squared = 167.02, df = 1, p-value < 2.2e-16
+

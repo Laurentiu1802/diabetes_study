@@ -1,0 +1,44 @@
+
+Call:
+glm(formula = diabetes_binary ~ age + bmi + glucose, family = "binomial", 
+    data = pima_selected)
+
+Coefficients:
+             Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -8.393743   0.666067 -12.602  < 2e-16 ***
+age          0.030157   0.007632   3.951 7.77e-05 ***
+bmi          0.081590   0.013526   6.032 1.62e-09 ***
+glucose      0.032512   0.003329   9.767  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 993.48  on 767  degrees of freedom
+Residual deviance: 755.68  on 764  degrees of freedom
+AIC: 763.68
+
+Number of Fisher Scoring iterations: 5
+
+
+Call:
+glm(formula = diabetes_binary ~ age + bmi + glucose, family = "binomial", 
+    data = nhanes_selected)
+
+Coefficients:
+              Estimate Std. Error z value Pr(>|z|)    
+(Intercept) -11.564439   0.554111 -20.870  < 2e-16 ***
+age           0.057503   0.004883  11.776  < 2e-16 ***
+bmi           0.053601   0.009334   5.743 9.31e-09 ***
+glucose       0.040978   0.002618  15.650  < 2e-16 ***
+---
+Signif. codes:  0 ‘***’ 0.001 ‘**’ 0.01 ‘*’ 0.05 ‘.’ 0.1 ‘ ’ 1
+
+(Dispersion parameter for binomial family taken to be 1)
+
+    Null deviance: 2334.7  on 2841  degrees of freedom
+Residual deviance: 1388.0  on 2838  degrees of freedom
+AIC: 1396
+
+Number of Fisher Scoring iterations: 6
+
