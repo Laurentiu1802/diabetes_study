@@ -1,5 +1,7 @@
 Title: Comparative Analysis of Diabetes Risk in Pima and NHANES Populations
 
+Link to GitHub Repo: https://github.com/Laurentiu1802/diabetes_study.git
+
 Problem Solving Mode:
 This project aimed to compare diabetes-related risk factors between a high-risk population (Pima Indian women) and a general U.S. population sample (NHANES 2017–2018). The study used descriptive statistics, hypothesis testing (t-tests and chi-square), and logistic regression to model and interpret diabetes risk.
 
